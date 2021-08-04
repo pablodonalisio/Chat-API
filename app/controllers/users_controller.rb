@@ -1,4 +1,6 @@
 class UsersController < ApplicationController
+  skip_before_action :set_current_user, only: [:create]
+
   def create
     user = User.new(user_params)
     if user.save
