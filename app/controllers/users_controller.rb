@@ -15,6 +15,11 @@ class UsersController < ApplicationController
     render json: @users, fields: %i[id name]
   end
 
+  def show
+    user = User.find(params[:id])
+    render json: user, status: :ok
+  end
+
   private
 
   def user_params
