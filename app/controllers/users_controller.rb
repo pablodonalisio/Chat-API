@@ -10,6 +10,11 @@ class UsersController < ApplicationController
     end
   end
 
+  def index
+    @users = User.all
+    render json: @users, fields: %i[id name]
+  end
+
   private
 
   def user_params
