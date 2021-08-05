@@ -16,7 +16,11 @@ class UsersController < ApplicationController
   end
 
   def show
-    render json: user, status: :ok
+    if user
+      render json: user, status: :ok
+    else
+      render json: { error: "Couldn't find User with id #{params[:id]}" }, status: :not_found
+    end
   end
 
   private
@@ -26,6 +30,6 @@ class UsersController < ApplicationController
   end
 
   def user
-    @user ||= User.find(params[:id])
+    @user ||= User.find_by(id: params[:id])
   end
 end
