@@ -10,14 +10,21 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_08_04_192911) do
+ActiveRecord::Schema.define(version: 2021_08_05_145201) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
+  create_table "chat_users", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.bigint "chat_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["chat_id"], name: "index_chat_users_on_chat_id"
+    t.index ["user_id"], name: "index_chat_users_on_user_id"
+  end
+
   create_table "chats", force: :cascade do |t|
-    t.integer "user_1_id", null: false
-    t.integer "user_2_id", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
   end
@@ -45,6 +52,8 @@ ActiveRecord::Schema.define(version: 2021_08_04_192911) do
     t.index ["email"], name: "index_users_on_email", unique: true
   end
 
+  add_foreign_key "chat_users", "chats"
+  add_foreign_key "chat_users", "users"
   add_foreign_key "messages", "chats"
   add_foreign_key "messages", "users"
 end

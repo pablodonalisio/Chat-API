@@ -3,5 +3,7 @@ class User < ApplicationRecord
   validates :email, format: { with: URI::MailTo::EMAIL_REGEXP }
   validates :email, uniqueness: true
 
+  has_many :chat_users
+  has_many :chats, through: :chat_users
   has_many :messages
 end
