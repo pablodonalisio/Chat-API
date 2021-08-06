@@ -9,4 +9,9 @@ class ChatsController < ApplicationController
       render json: chat.errors, status: :bad_request
     end
   end
+
+  def index
+    chats = @current_user.chats.order(updated_at: :desc)
+    render json: chats, status: :ok
+  end
 end
