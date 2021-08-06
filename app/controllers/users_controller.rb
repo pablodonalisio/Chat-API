@@ -15,9 +15,21 @@ class UsersController < ApplicationController
     render json: @users, fields: %i[id name]
   end
 
+  def show
+    if user
+      render json: user, status: :ok
+    else
+      render json: { error: "Couldn't find User with id #{params[:id]}" }, status: :not_found
+    end
+  end
+
   private
 
   def user_params
     params.require(:user).permit(:first_name, :last_name, :email, :password)
+  end
+
+  def user
+    @user ||= User.find_by(id: params[:id])
   end
 end
