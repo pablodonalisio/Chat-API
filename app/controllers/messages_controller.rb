@@ -1,5 +1,4 @@
 class MessagesController < ApplicationController
-  before_action :set_message, only: [:update]
   before_action :authorize, only: [:update]
 
   def index
@@ -8,26 +7,29 @@ class MessagesController < ApplicationController
   end
 
   def update
-    if @message.update(message_params)
-      render json: @message, status: :ok
+    if message.update(message_params)
+      render json: message, status: :ok
     else
-      render json: @message.errors, status: :bad_request
+      render json: message.errors, status: :bad_request
     end
   end
 
   private
 
+  def message_params
+    params.require(:message).permit(:body)
+  end
+
   def chat
     @chat ||= Chat.find(params[:chat_id])
   end
 
-  def set_message
-    @message ||= Message.find_by(id: params[:id])
-    render json: { error: "Couldn't find message" }, status: :bad_request if @message.nil?
+  def message
+    @message ||= Message.find(params[:id])
   end
 
   def authorize
-    error = { error: 'Not authorized'}
-    render json: error, status: :forbidden unless @message.user == @current_user
+    error = { error: 'Not authorized' }
+    render json: error, status: :forbidden unless message.user == @current_user
   end
 end
