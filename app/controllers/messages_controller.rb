@@ -4,9 +4,17 @@ class MessagesController < ApplicationController
     render json: messages, status: :ok
   end
 
+  def show
+    render json: message, status: :ok, serializer: MessageShowSerializer
+  end
+
   private
 
   def chat
     @chat ||= Chat.find(params[:chat_id])
+  end
+
+  def message
+    @message ||= Message.find(params[:id])
   end
 end
