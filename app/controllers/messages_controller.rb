@@ -3,7 +3,7 @@ class MessagesController < ApplicationController
 
   def index
     messages = chat.messages.order(updated_at: :desc)
-    render json: messages, status: :ok
+    render json: messages, status: :ok, user_settings: @current_user.settings
   end
 
   def show
