@@ -6,6 +6,10 @@ class MessagesController < ApplicationController
     render json: messages, status: :ok
   end
 
+  def show
+    render json: message, status: :ok, serializer: MessageShowSerializer
+  end
+
   def update
     if message.update(message_params)
       render json: message, status: :ok
