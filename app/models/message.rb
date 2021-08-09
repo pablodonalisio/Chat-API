@@ -18,7 +18,7 @@ class Message < ApplicationRecord
 
   def censor_message
     CENSORED_WORDS.each do |word|
-      body.gsub!(word) do
+      body.gsub!(/#{word}/i) do
         charset = Array('!'..'.')
         Array.new(word.length) { charset.sample }.join
       end
