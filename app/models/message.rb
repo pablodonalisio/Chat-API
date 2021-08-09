@@ -17,11 +17,13 @@ class Message < ApplicationRecord
   end
 
   def censor_message
+    original_message = String.new(body)
     CENSORED_WORDS.each do |word|
       body.gsub!(/#{word}/i) do
         charset = Array('!'..'.')
         Array.new(word.length) { charset.sample }.join
       end
     end
+    self.censored = true if original_message != body
   end
 end
