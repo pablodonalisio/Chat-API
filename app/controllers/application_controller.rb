@@ -10,6 +10,6 @@ class ApplicationController < ActionController::API
   end
 
   def record_not_found(exception)
-    render json: { error: exception }, status: :not_found
+    render json: { error: exception.to_s.split(' with')[0] }, status: :not_found
   end
 end
