@@ -5,6 +5,7 @@ class Message < ApplicationRecord
   belongs_to :chat
 
   validate :last_message, on: :update
+  before_save :check_polarity
   before_save :censor_message
 
   def last_message
@@ -25,5 +26,17 @@ class Message < ApplicationRecord
       end
     end
     self.censored = true if original_message != body
+  end
+
+  def check_polarity
+    request = Net::HTTP.post URI('https://sentim-api.herokuapp.com/api/v1/'),
+                             { 'text' => body }.to_json,
+                             'Content-type' => 'application/json',
+                             'Accept' => 'application/json'
+    self.polarity = if request.is_a?(Net::HTTPSuccess)
+                      JSON.parse(request.body)['result']['type']
+                    else
+                      'API failed'
+                    end
   end
 end
