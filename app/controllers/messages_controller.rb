@@ -11,7 +11,7 @@ class MessagesController < ApplicationController
   end
 
   def update
-    if message.update(message_params)
+    if message.update(body: message_params[:body], modified: true)
       render json: message, status: :ok
     else
       render json: message.errors, status: :bad_request
