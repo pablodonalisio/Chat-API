@@ -29,14 +29,6 @@ class Message < ApplicationRecord
   end
 
   def check_polarity
-    request = Net::HTTP.post URI('https://sentim-api.herokuapp.com/api/v1/'),
-                             { 'text' => body }.to_json,
-                             'Content-type' => 'application/json',
-                             'Accept' => 'application/json'
-    self.polarity = if request.is_a?(Net::HTTPSuccess)
-                      JSON.parse(request.body)['result']['type']
-                    else
-                      'API failed'
-                    end
+    self.polarity = MessageSentimentAnalyst.call(body)
   end
 end
