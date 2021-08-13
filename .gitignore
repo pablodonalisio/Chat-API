@@ -30,5 +30,3 @@
 .env
 
 *.rdb
-
-db/structure.sql
