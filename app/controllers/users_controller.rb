@@ -1,6 +1,4 @@
 class UsersController < ApplicationController
-  skip_before_action :set_current_user, only: %i[create update]
-
   def create
     user = User.new(user_params)
     if user.save
@@ -11,7 +9,7 @@ class UsersController < ApplicationController
   end
 
   def index
-    @users = User.where.not(id: @current_user.id)
+    @users = User.where.not(id: current_user.id)
     render json: @users, each_serializer: UserIndexSerializer
   end
 
