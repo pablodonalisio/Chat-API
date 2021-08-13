@@ -3,6 +3,7 @@ class MessageSentimentAnalyst
 
   def initialize(message)
     @message = message
+    @response = nil
   end
 
   def self.call(*args, &block)
@@ -10,14 +11,13 @@ class MessageSentimentAnalyst
   end
 
   def call
-    request = Net::HTTP.post URI(SENTIM_API_URL),
-                             { 'text' => @message }.to_json,
-                             'Content-type' => 'application/json',
-                             'Accept' => 'application/json'
-    polarity = if request.is_a?(Net::HTTPSuccess)
-                 JSON.parse(request.body)['result']['type']
-               else
-                 'API failed'
-               end
+    response.is_a?(Net::HTTPSuccess) ? JSON.parse(response.body)['result']['type'] : 'API failed'
+  end
+
+  def response
+    @response ||= Net::HTTP.post URI(SENTIM_API_URL),
+                                 { 'text' => @message }.to_json,
+                                 'Content-type' => 'application/json',
+                                 'Accept' => 'application/json'
   end
 end
