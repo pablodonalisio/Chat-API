@@ -3,10 +3,11 @@ class MessageSerializer < ActiveModel::Serializer
   attributes :id, :body, :chat_id, :user_id
 
   def body
-    return object.body.upcase if @instance_options[:user_settings] == 'all_upcase'
-    return object.body.downcase if @instance_options[:user_settings] == 'all_downcase'
-    return transliterate(object.body) if @instance_options[:user_settings] == 'no_accent_marks'
+    text = object.body
+    return text.upcase if current_user.all_upcase_settings?
+    return text.downcase if current_user.all_downcase_settings?
+    return transliterate(text) if current_user.no_accent_marks_settings?
 
-    object.body
+    text
   end
 end
