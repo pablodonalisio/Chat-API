@@ -4,7 +4,7 @@ class MessagesController < ApplicationController
 
   def index
     messages = chat.messages.order(updated_at: :desc)
-    render json: messages, status: :ok
+    render json: messages, status: :ok, scope: current_user, scope_name: :current_user
   end
 
   def create
@@ -50,6 +50,6 @@ class MessagesController < ApplicationController
 
   def authorize
     error = { error: 'Not authorized' }
-    render json: error, status: :forbidden unless message.user == @current_user
+    render json: error, status: :forbidden unless message.user == current_user
   end
 end

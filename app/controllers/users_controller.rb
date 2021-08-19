@@ -1,6 +1,4 @@
 class UsersController < ApplicationController
-  skip_before_action :set_current_user, only: [:create]
-
   def create
     user = User.new(user_params)
     if user.save
@@ -11,7 +9,7 @@ class UsersController < ApplicationController
   end
 
   def index
-    @users = User.where.not(id: @current_user.id)
+    @users = User.where.not(id: current_user.id)
     render json: @users, each_serializer: UserIndexSerializer
   end
 
@@ -19,10 +17,18 @@ class UsersController < ApplicationController
     render json: user, status: :ok
   end
 
+  def update
+    if user.update(user_params)
+      render json: user, status: :ok
+    else
+      render json: user.errors, status: :bad_request
+    end
+  end
+
   private
 
   def user_params
-    params.require(:user).permit(:first_name, :last_name, :email, :password)
+    params.require(:user).permit(:first_name, :last_name, :email, :password, :settings)
   end
 
   def user
