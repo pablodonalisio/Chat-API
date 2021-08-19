@@ -5,6 +5,7 @@ class Message < ApplicationRecord
   belongs_to :chat
 
   validate :last_message, on: :update
+  before_save :check_polarity
   before_save :censor_message
 
   def last_message
@@ -25,5 +26,9 @@ class Message < ApplicationRecord
       end
     end
     self.censored = true if original_message != body
+  end
+
+  def check_polarity
+    self.polarity = MessageSentimentAnalyst.call(body)
   end
 end
